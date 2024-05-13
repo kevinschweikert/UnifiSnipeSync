@@ -1,5 +1,9 @@
-requests==2.26.0
-ratelimiter==1.2.0
-tabulate==0.8.9
+certifi==2024.2.2
+charset-normalizer==2.0.12
+idna==3.7
+pyrate-limiter==3.6.1
 pyunifi==2.21
+requests==2.26.0
+tabulate==0.8.9
 termcolor==2.2.0
+urllib3==1.26.18

@@ -1,6 +1,6 @@
 # snipe.py
 import requests
-from ratelimiter import RateLimiter
+from pyrate_limiter import Duration, Rate, Limiter, BucketFullException
 from time import sleep
 
 class Snipe:
@@ -13,14 +13,15 @@ class Snipe:
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
         }
-        self.rate_limiter = RateLimiter(max_calls=rate_limit, period=60)
+        self.rate_limiter = Limiter(Rate(rate_limit, Duration.MINUTE))
 
     def fetch_paginated_results(self, url, params=None):
         results = []
         page = 1
 
         while True:
-            with self.rate_limiter:
+            try:
+                self.rate_limiter.try_acquire("snipe")
                 params = params or {}
                 params["offset"] = (page - 1) * 500
                 params["limit"] = 500
@@ -30,7 +31,6 @@ class Snipe:
 
                 if data.get("status") == "error" and data.get("messages") == "Too Many Requests":
                     sleep(60)
-                    self.rate_limiter.clear()
                     continue
 
                 response.raise_for_status()
@@ -40,6 +40,11 @@ class Snipe:
                     break
 
                 page += 1
+
+            except BucketFullException as err:
+                print(err)
+                sleep(10)
+                continue
 
         return results
 
