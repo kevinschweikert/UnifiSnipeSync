@@ -19,7 +19,7 @@ from tabulate import tabulate
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-unifi_model_mapping = {v.lower(): k for k, v in config["unifi_model_mapping"].items()}
+unifi_model_mapping = {k.lower(): v for k, v in config["unifi_model_mapping"].items()}
 mac_address_field_name = config.get('SnipeIT', 'mac_address_field_name')
 
 # Set up Snipe-IT API
@@ -128,7 +128,7 @@ def add_devices_to_snipeit(devices, unifi_devices_in_snipe, dry_run):
         print("Checking device "+device['name']+" - ("+device['serial']+")")
        # print(device)
         existing_device = device_exists_in_snipeit(device["serial"], unifi_devices_in_snipe)
-        remapped_model_number = unifi_model_mapping.get(device["model"], device["model"])
+        remapped_model_number = unifi_model_mapping.get( device['model'].lower(), device['model'])
        # print("remapped_model_number", remapped_model_number)
         model = {
             "name": remapped_model_number,
