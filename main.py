@@ -100,6 +100,7 @@ def create_model_if_not_exists(model, unifi_models, dry_run):
         else:
             #add model category to request
             model['category_id'] = config.get("SnipeIT", "unifi_model_category_id")
+            model['fieldset_id'] = config.get("SnipeIT", "unifi_model_fieldset_id")
             response = snipe.create_model(model)
             new_model_json = response.json()
             status = new_model_json.get("status")
