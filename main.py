@@ -134,7 +134,7 @@ def add_devices_to_snipeit(devices, unifi_devices_in_snipe, dry_run):
         model = {
             "name": remapped_model_number,
             "manufacturer_id": config.get("SnipeIT", "unifi_manufacturer_id"),
-            "model_number": remapped_model_number
+            "model_number": device["model"]
         }
         model_in_snipeit = create_model_if_not_exists(model, unifi_models, dry_run)
         
